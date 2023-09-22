@@ -41,13 +41,6 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int):
                     print("renaming...")
                     downsample_path.rename(downsampled_path_expected)
 
-        elif len(downsample_dirs) > 1:
-            print(downsampled_path_expected)
-            print("Found more than one potential downsample directory:")
-            for dir in downsample_dirs:
-                print(dir)
-            print()
-
     print("Finished fixing directory names")
 
 
