@@ -23,10 +23,7 @@ if __name__ == '__main__':
         downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
         if len(downsample_dirs) == 1:
             downsample_path = downsample_dirs[0]
-            if downsample_path == downsampled_path_expected:
-                # Already at correct path
-                pass
-            else:
+            if downsample_path != downsampled_path_expected:
                 # Rename
                 print("Rename?")
                 sys.stdout.writelines(
@@ -37,7 +34,12 @@ if __name__ == '__main__':
                         )
                     )
                 )
-                print()
+                inp = input("Continue? ")
+                if inp != "y":
+                    print("skipping...")
+                else:
+                    print("renaming...")
+                    downsample_path.rename(downsampled_path_expected)
 
     """
     print("Following downsampled datasets not available:")
