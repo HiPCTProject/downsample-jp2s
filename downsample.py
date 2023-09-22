@@ -4,15 +4,24 @@ from copy import deepcopy
 
 if __name__ == '__main__':
     datasets = load_scans()
+    bin_factor = 2
+
 
     # Rename existing downsampled JP2 directories
     for dataset in datasets:
         original_path = dataset.esrf_jp2_path
-        bin_factor = 2
+        # Get expeted downsample path
+        downsampled_dataset = deepcopy(dataset)
         downsample_res = bin_factor * dataset.resolution_um
+        downsampled_dataset.resolution_um = downsample_res
+        downsampled_path_expected = dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
+
+
         downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
         if len(downsample_dirs) == 1:
-            print(downsample_dirs)
+            downsample_path = downsample_dirs[0]
+            if downsample_path == downsampled_path_expected:
+                print(downsample_path)
 
     """
     print("Following downsampled datasets not available:")
