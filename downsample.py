@@ -2,9 +2,13 @@ from hipct_data_tools.data_model import load_scans
 
 from copy import deepcopy
 
+import difflib
+
+
 if __name__ == '__main__':
     datasets = load_scans()
     bin_factor = 2
+    differ = difflib.Differ()
 
 
     # Rename existing downsampled JP2 directories
@@ -21,7 +25,12 @@ if __name__ == '__main__':
         if len(downsample_dirs) == 1:
             downsample_path = downsample_dirs[0]
             if downsample_path == downsampled_path_expected:
-                print(downsample_path)
+                # Already at correct path
+                pass
+            else:
+                # Rename
+                d = differ.compare(str(downsample_path), str(downsampled_path_expected))
+                print(d)
 
     """
     print("Following downsampled datasets not available:")
