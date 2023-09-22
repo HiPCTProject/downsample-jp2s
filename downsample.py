@@ -51,14 +51,11 @@ if __name__ == '__main__':
 
     fix_old_names(datasets, bin_factor)
 
-
-    """
     print("Following downsampled datasets not available:")
     for dataset in datasets:
         downsampled_dataset = deepcopy(dataset)
         downsampled_dataset.resolution_um = 2 * dataset.resolution_um
 
-        downsampled_path = dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
-        if not(downsampled_path.exists()):
-            print(downsampled_path)
-    """
+        downsampled_path_expected = dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
+        if not(downsampled_path_expected.exists()):
+            print(downsampled_path_expected)
