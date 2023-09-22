@@ -17,7 +17,8 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int):
         downsample_res = bin_factor * dataset.resolution_um
         downsampled_dataset.resolution_um = downsample_res
         downsampled_path_expected = dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
-
+        if downsampled_path_expected.exists():
+            continue
 
         downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
         if len(downsample_dirs) == 1:
@@ -44,6 +45,7 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int):
             print("Found more than one potential downsample directory:")
             for dir in downsample_dirs:
                 print(dir)
+            print()
 
     print("Finished fixing directory names")
 
