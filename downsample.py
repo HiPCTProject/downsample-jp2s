@@ -8,7 +8,9 @@ if __name__ == '__main__':
     # Rename existing downsampled JP2 directories
     for dataset in datasets:
         original_path = dataset.esrf_jp2_path
-        downsample_dirs = list(original_path.parent.glob(f"{dataset.resolution_um}*_jp2_"))
+        bin_factor = 2
+        downsample_res = bin_factor * dataset.resolution_um
+        downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
         if len(downsample_dirs) == 1:
             print(downsample_dirs)
 
