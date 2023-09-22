@@ -44,7 +44,7 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int):
             print("Found more than one potential downsample directory:")
             print(downsample_dirs)
 
-        print("Finished fixing directory names")
+    print("Finished fixing directory names")
 
 
 
