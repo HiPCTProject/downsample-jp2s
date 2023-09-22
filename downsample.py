@@ -1,9 +1,8 @@
 from hipct_data_tools.data_model import load_scans
 
 from copy import deepcopy
-
 import difflib
-
+import sys
 
 if __name__ == '__main__':
     datasets = load_scans()
@@ -29,8 +28,7 @@ if __name__ == '__main__':
                 pass
             else:
                 # Rename
-                d = differ.compare(str(downsample_path), str(downsampled_path_expected))
-                print(d)
+                sys.stdout.writelines((list(differ.compare([str(downsample_path)], [str(downsampled_path_expected)]))))
 
     """
     print("Following downsampled datasets not available:")
