@@ -32,8 +32,8 @@ if __name__ == '__main__':
                 sys.stdout.writelines(
                     list(
                         differ.compare(
-                            [str(downsample_path)],
-                            [str(downsampled_path_expected)]
+                            [str(downsample_path) + "\n"],
+                            [str(downsampled_path_expected) + "\n"]
                         )
                     )
                 )
