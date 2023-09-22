@@ -28,7 +28,16 @@ if __name__ == '__main__':
                 pass
             else:
                 # Rename
-                sys.stdout.writelines((list(differ.compare([str(downsample_path)], [str(downsampled_path_expected)]))))
+                print("Rename?")
+                sys.stdout.writelines(
+                    list(
+                        differ.compare(
+                            [str(downsample_path)],
+                            [str(downsampled_path_expected)]
+                        )
+                    )
+                )
+                print()
 
     """
     print("Following downsampled datasets not available:")
