@@ -1,16 +1,15 @@
-from hipct_data_tools.data_model import load_scans
+from hipct_data_tools.data_model import load_scans, HiPCTScan
 
 from copy import deepcopy
 import difflib
 import sys
+from typing import List
 
-if __name__ == '__main__':
-    datasets = load_scans()
-    bin_factor = 2
+
+def fix_old_names(datasets: List[HiPCTScan], bin_factor: int):
+    # Rename existing downsampled JP2 directories if they have the wrong name
     differ = difflib.Differ()
 
-
-    # Rename existing downsampled JP2 directories
     for dataset in datasets:
         original_path = dataset.esrf_jp2_path
         # Get expeted downsample path
@@ -40,6 +39,21 @@ if __name__ == '__main__':
                 else:
                     print("renaming...")
                     downsample_path.rename(downsampled_path_expected)
+
+        elif len(downsample_dirs) > 1:
+            print("Found more than one potential downsample directory:")
+            print(downsample_dirs)
+
+        print("Finished fixing directory names")
+
+
+
+if __name__ == '__main__':
+    datasets = load_scans()
+    bin_factor = 2
+
+    fix_old_names(datasets, bin_factor)
+
 
     """
     print("Following downsampled datasets not available:")
