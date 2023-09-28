@@ -58,4 +58,6 @@ if __name__ == '__main__':
 
         downsampled_path_expected = dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
         if not(downsampled_path_expected.exists()):
+            print(downsampled_path_expected.parent)
             print(downsampled_path_expected)
+            print()
