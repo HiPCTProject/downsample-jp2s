@@ -73,6 +73,7 @@ if __name__ == "__main__":
                 "--bin-factor=2 "
                 "--num-workers=128 "
                 f"--output-directory={downsampled_path_expected} "
-                f"--fname-prefix={downsampled_path_expected.name[:-4]}" # -4 to strip jp2_ from end
+                f"--fname-prefix={downsampled_path_expected.name[:-4]} " # -4 to strip jp2_ from end
+                "--cratio=10"
             )
             print()
