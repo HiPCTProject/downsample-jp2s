@@ -5,6 +5,7 @@ import difflib
 import sys
 from typing import List
 
+from rebin import rebin
 
 differ = difflib.Differ()
 
@@ -66,14 +67,15 @@ if __name__ == "__main__":
             dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
         )
         if not (downsampled_path_expected.exists()):
+            print("Downsampling:")
             print(downsampled_path_expected.parent)
             print(downsampled_path_expected)
-            print(
-                f"python rebin.py {dataset.esrf_jp2_path} "
-                "--bin-factor=2 "
-                "--num-workers=128 "
-                f"--output-directory={downsampled_path_expected} "
-                f"--fname-prefix={downsampled_path_expected.name[:-4]} " # -4 to strip jp2_ from end
-                "--cratio=10"
-            )
             print()
+            rebin.rebin(
+                dataset.esrf_jp2_path,
+                bin_factor=2,
+                cratio=10,
+                num_workers=128,
+                output_directory=downsampled_path_expected,
+                fname_prefix=downsampled_path_expected.name[:-4], # -4 to strip 'jp2_'
+            )
