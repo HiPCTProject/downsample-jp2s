@@ -1,0 +1,3 @@
+[submodule "rebin"]
+	path = rebin
+	url = https://github.com/HiPCTProject/rebin
