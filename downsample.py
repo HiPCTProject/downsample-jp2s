@@ -66,4 +66,5 @@ if __name__ == "__main__":
         if not (downsampled_path_expected.exists()):
             print(downsampled_path_expected.parent)
             print(downsampled_path_expected)
+            print(f"python rebin.py {dataset.esrf_jp2_path} --bin-factor=2 --num-workers=128 --output-directory={downsampled_path_expected}")
             print()
