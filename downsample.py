@@ -31,6 +31,8 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int) -> None:
             continue
 
         downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
+        # Some datasets are truncated to 2 decimal points...
+        downsample_dirs += list(original_path.parent.glob(f"{downsample_res:.02f}*_jp2_"))
         if len(downsample_dirs) == 1:
             downsample_path = downsample_dirs[0]
             if downsample_path != downsampled_path_expected:
