@@ -32,7 +32,9 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int) -> None:
 
         downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
         # Some datasets are truncated to 2 decimal points...
-        downsample_dirs += list(original_path.parent.glob(f"{downsample_res:.02f}*_jp2_"))
+        downsample_dirs += list(
+            original_path.parent.glob(f"{downsample_res:.02f}*_jp2_")
+        )
         if len(downsample_dirs) == 1:
             downsample_path = downsample_dirs[0]
             if downsample_path != downsampled_path_expected:
@@ -66,5 +68,11 @@ if __name__ == "__main__":
         if not (downsampled_path_expected.exists()):
             print(downsampled_path_expected.parent)
             print(downsampled_path_expected)
-            print(f"python rebin.py {dataset.esrf_jp2_path} --bin-factor=2 --num-workers=128 --output-directory={downsampled_path_expected}")
+            print(
+                f"python rebin.py {dataset.esrf_jp2_path} "
+                "--bin-factor=2 "
+                "--num-workers=128 "
+                f"--output-directory={downsampled_path_expected} "
+                f"--fname-prefix={downsampled_path_expected.name.rstrip('jp2_')}"
+            )
             print()
