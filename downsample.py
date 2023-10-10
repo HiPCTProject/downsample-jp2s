@@ -88,7 +88,6 @@ if __name__ == "__main__":
     fix_old_names(datasets, bin_factor=2)
     fix_old_names(datasets, bin_factor=4)
 
-    print("Following downsampled datasets not available:")
     for dataset in datasets:
         downsample(dataset, bin_factor=2)
         # If bin-by-two is > 5GB, also add a bin-by-four
