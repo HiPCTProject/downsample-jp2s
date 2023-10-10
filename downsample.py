@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 dataset.esrf_jp2_path,
                 bin_factor=bin_factor,
                 cratio=10,
-                num_workers=128,
+                num_workers=64,
                 output_directory=downsampled_path_expected,
                 fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
             )
