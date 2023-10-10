@@ -1,4 +1,5 @@
-from hipct_data_tools.data_model import load_scans, HiPCTScan
+from hipct_data_tools.data_model import HiPCTDataSet
+from hipct_data_tools import load_datasets
 
 from copy import deepcopy
 import difflib
@@ -17,7 +18,7 @@ def print_diff(a: str, b: str) -> None:
     sys.stdout.writelines(list(differ.compare([a + "\n"], [b + "\n"])))
 
 
-def fix_old_names(datasets: List[HiPCTScan], bin_factor: int) -> None:
+def fix_old_names(datasets: List[HiPCTDataSet], bin_factor: int) -> None:
     # Rename existing downsampled JP2 directories if they have the wrong name
     for dataset in datasets:
         original_path = dataset.esrf_jp2_path
@@ -52,16 +53,24 @@ def fix_old_names(datasets: List[HiPCTScan], bin_factor: int) -> None:
     print("Finished fixing directory names")
 
 
+def downample_dataset(dataset: HiPCTDataSet, bin_factor: int) -> HiPCTDataSet:
+    """
+    Create a copy of a dataset, with a downsampled resolution.
+    """
+    downsampled_dataset = deepcopy(dataset)
+    downsampled_dataset.resolution_um = bin_factor * dataset.resolution_um
+    return downsampled_dataset
+
+
 if __name__ == "__main__":
-    datasets = load_scans()
+    datasets = load_datasets()
     bin_factor = 2
 
     fix_old_names(datasets, bin_factor)
 
     print("Following downsampled datasets not available:")
     for dataset in datasets:
-        downsampled_dataset = deepcopy(dataset)
-        downsampled_dataset.resolution_um = 2 * dataset.resolution_um
+        downsampled_dataset = downample_dataset(dataset, bin_factor)
 
         downsampled_path_expected = (
             dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
@@ -73,9 +82,9 @@ if __name__ == "__main__":
             print()
             rebin.rebin(
                 dataset.esrf_jp2_path,
-                bin_factor=2,
+                bin_factor=bin_factor,
                 cratio=10,
                 num_workers=128,
                 output_directory=downsampled_path_expected,
-                fname_prefix=downsampled_path_expected.name[:-4], # -4 to strip 'jp2_'
+                fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
             )
