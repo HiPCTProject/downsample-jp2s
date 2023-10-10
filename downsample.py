@@ -61,29 +61,36 @@ def fix_old_names(datasets: List[HiPCTDataSet], bin_factor: int) -> None:
     print("Finished fixing directory names")
 
 
+def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
+    downsampled_dataset = downample_dataset(dataset, bin_factor)
+
+    downsampled_path_expected = (
+        dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
+    )
+    if not (downsampled_path_expected.exists()):
+        print("Downsampling:")
+        print(downsampled_path_expected.parent)
+        print(downsampled_path_expected)
+        print()
+        rebin.rebin(
+            dataset.esrf_jp2_path,
+            bin_factor=bin_factor,
+            cratio=10,
+            num_workers=64,
+            output_directory=downsampled_path_expected,
+            fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
+        )
+
+
 if __name__ == "__main__":
     datasets = load_datasets()
-    bin_factor = 2
 
-    fix_old_names(datasets, bin_factor)
+    fix_old_names(datasets, bin_factor=2)
+    fix_old_names(datasets, bin_factor=4)
 
     print("Following downsampled datasets not available:")
     for dataset in datasets:
-        downsampled_dataset = downample_dataset(dataset, bin_factor)
-
-        downsampled_path_expected = (
-            dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
-        )
-        if not (downsampled_path_expected.exists()):
-            print("Downsampling:")
-            print(downsampled_path_expected.parent)
-            print(downsampled_path_expected)
-            print()
-            rebin.rebin(
-                dataset.esrf_jp2_path,
-                bin_factor=bin_factor,
-                cratio=10,
-                num_workers=64,
-                output_directory=downsampled_path_expected,
-                fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
-            )
+        downsample(dataset, bin_factor=2)
+        # If bin-by-two is > 5GB, also add a bin-by-four
+        if dataset.compressed_size_gb / 8 > 5:
+            downsample(dataset, bin_factor=4)
