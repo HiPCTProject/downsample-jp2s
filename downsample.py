@@ -58,7 +58,7 @@ def fix_old_names(datasets: List[HiPCTDataSet], bin_factor: int) -> None:
                     print("renaming...")
                     downsample_path.rename(downsampled_path_expected)
 
-    print("Finished fixing directory names")
+    print(f"Finished fixing directory names (bin by {bin_factor})")
 
 
 def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
