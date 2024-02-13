@@ -30,35 +30,40 @@ def downample_dataset(dataset: HiPCTDataSet, bin_factor: int) -> HiPCTDataSet:
 def fix_old_names(datasets: List[HiPCTDataSet], bin_factor: int) -> None:
     # Rename existing downsampled JP2 directories if they have the wrong name
     for dataset in datasets:
-        original_path = dataset.esrf_jp2_path
-        # Get expeted downsample path
-        downsampled_dataset = downample_dataset(dataset, bin_factor)
-        downsampled_path_expected = (
-            dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
-        )
-        if downsampled_path_expected.exists():
-            continue
-
-        downsample_res = downsampled_dataset.resolution_um
-        downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
-        # Some datasets are truncated to 2 decimal points...
-        downsample_dirs += list(
-            original_path.parent.glob(f"{downsample_res:.02f}*_jp2_")
-        )
-        if len(downsample_dirs) == 1:
-            downsample_path = downsample_dirs[0]
-            if downsample_path != downsampled_path_expected:
-                # Rename
-                print("Rename?")
-                print_diff(str(downsample_path), str(downsampled_path_expected))
-                inp = input("Continue? ")
-                if inp != "y":
-                    print("skipping...")
-                else:
-                    print("renaming...")
-                    downsample_path.rename(downsampled_path_expected)
-
+        fix_old_name(dataset, bin_factor)
     print(f"Finished fixing directory names (bin by {bin_factor})")
+
+
+def fix_old_name(dataset: HiPCTDataSet, bin_factor: int) -> None:
+    original_path = dataset.esrf_jp2_path
+    # Get expeted downsample path
+    downsampled_dataset = downample_dataset(dataset, bin_factor)
+    downsampled_path_expected = (
+        dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
+    )
+    if downsampled_path_expected.exists():
+        return
+
+    downsample_res = downsampled_dataset.resolution_um
+    downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
+    # Some datasets are truncated to 2 decimal points...
+    downsample_dirs += list(
+        original_path.parent.glob(f"{downsample_res:.02f}*_jp2_")
+    )
+    if len(downsample_dirs) == 1:
+        downsample_path = downsample_dirs[0]
+        if downsample_path != downsampled_path_expected:
+            # Rename
+            print("Rename?")
+            print_diff(str(downsample_path), str(downsampled_path_expected))
+            inp = input("Continue? ")
+            if inp != "y":
+                print("skipping...")
+            else:
+                print("renaming...")
+                downsample_path.rename(downsampled_path_expected)
+
+
 
 
 def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
