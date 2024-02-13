@@ -72,7 +72,7 @@ def get_slurm_script(
     Construct a slurm script for running jp2 > n5 conversion on a single directory.
     """
     log_dir = LOG_DIR / "logs"
-    job_name = f"rebin_{input_jp2_folder.name}"
+    job_name = f"rebin_{output_jp2_folder.name}"
 
     sh_script = f"""#!/bin/bash
 #SBATCH --output={log_dir}/%j-%x.log
