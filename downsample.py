@@ -18,7 +18,7 @@ def print_diff(a: str, b: str) -> None:
     sys.stdout.writelines(list(differ.compare([a + "\n"], [b + "\n"])))
 
 
-def downample_dataset(dataset: HiPCTDataSet, bin_factor: int) -> HiPCTDataSet:
+def downsample_dataset(dataset: HiPCTDataSet, bin_factor: int) -> HiPCTDataSet:
     """
     Create a copy of a dataset, with a downsampled resolution.
     """
@@ -37,7 +37,7 @@ def fix_old_names(datasets: List[HiPCTDataSet], bin_factor: int) -> None:
 def fix_old_name(dataset: HiPCTDataSet, bin_factor: int) -> None:
     original_path = dataset.esrf_jp2_path
     # Get expeted downsample path
-    downsampled_dataset = downample_dataset(dataset, bin_factor)
+    downsampled_dataset = downsample_dataset(dataset, bin_factor)
     downsampled_path_expected = (
         dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
     )
@@ -67,7 +67,7 @@ def fix_old_name(dataset: HiPCTDataSet, bin_factor: int) -> None:
 
 
 def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
-    downsampled_dataset = downample_dataset(dataset, bin_factor)
+    downsampled_dataset = downsample_dataset(dataset, bin_factor)
 
     downsampled_path_expected = (
         dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
