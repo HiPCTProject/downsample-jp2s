@@ -132,7 +132,7 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
             f.write(slurm_script)
 
         print(f"sbatch {job_file}")
-        subprocess.run(["sbatch", str(job_file)])
+        # subprocess.run(["sbatch", str(job_file)])
         print()
 
 
