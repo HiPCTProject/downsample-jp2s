@@ -1,6 +1,3 @@
-default_language_version:
-  python: python3.8
-
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.0.282
@@ -36,15 +33,4 @@ repos:
     rev: v1.4.1
     hooks:
       - id: mypy
-        additional_dependencies:
-          [
-            numpy,
-            pydantic,
-            pandas-stubs,
-            pytest,
-            pyfakefs,
-            pytest-mock,
-            types-tqdm,
-            types-Pillow,
-          ]
         args: [--config-file, pyproject.toml]
