@@ -104,7 +104,7 @@ mamba activate base
 echo Virtual environment started
 
 echo Running rebin command
-srun python rebin.py {input_jp2_folder} --output-directory {output_jp2_folder} --fname_prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10
+srun python rebin.py {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10
 """
 
     return sh_script
