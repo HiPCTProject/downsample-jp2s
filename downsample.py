@@ -132,9 +132,8 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
             f.write(slurm_script)
 
         print(f"sbatch {job_file}")
-        print()
         subprocess.run(["sbatch", str(job_file)])
-        exit()
+        print()
 
 
 if __name__ == "__main__":
@@ -146,6 +145,3 @@ if __name__ == "__main__":
 
     for dataset in datasets:
         downsample(dataset, bin_factor=2)
-        # If bin-by-two is > 5GB, also add a bin-by-four
-        if dataset.compressed_size_gb / 8 > 5:
-            downsample(dataset, bin_factor=4)
