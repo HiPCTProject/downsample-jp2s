@@ -32,6 +32,7 @@ def downsample_dataset(dataset: HiPCTDataSet, bin_factor: int) -> HiPCTDataSet:
 
 def fix_old_names(datasets: List[HiPCTDataSet], bin_factor: int) -> None:
     # Rename existing downsampled JP2 directories if they have the wrong name
+    print(f"Checking for broken directory names (bin by {bin_factor})...")
     for dataset in datasets:
         fix_old_name(dataset, bin_factor)
     print(f"Finished fixing directory names (bin by {bin_factor})")
