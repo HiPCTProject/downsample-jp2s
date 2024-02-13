@@ -6,8 +6,7 @@ from pathlib import Path
 import difflib
 import sys
 from typing import List
-
-from rebin import rebin
+import subprocess
 
 LOG_DIR = Path("/data/projects/hop/data_repository/Various/logs/rebinning")
 
@@ -121,14 +120,20 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
         print("Downsampling:")
         print(downsampled_path_expected.parent)
         print(downsampled_path_expected)
-        print()
         slurm_script = get_slurm_script(
             input_jp2_folder=dataset.esrf_jp2_path,
             output_jp2_folder=downsampled_path_expected,
             bin_factor=bin_factor,
             fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
         )
-        print(slurm_script)
+
+        job_file = LOG_DIR / "scripts" / f"{downsampled_path_expected.name}.sh"
+        with open(job_file, "w") as f:
+            f.write(slurm_script)
+
+        print(f"sbatch {job_file}")
+        print()
+        subprocess.run(["sbatch", str(job_file)])
         exit()
 
 
