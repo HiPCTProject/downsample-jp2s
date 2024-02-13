@@ -2,11 +2,14 @@ from hipct_data_tools.data_model import HiPCTDataSet
 from hipct_data_tools import load_datasets
 
 from copy import deepcopy
+from pathlib import Path
 import difflib
 import sys
 from typing import List
 
 from rebin import rebin
+
+LOG_DIR = Path("/data/projects/hop/data_repository/Various/logs/rebinning")
 
 differ = difflib.Differ()
 
@@ -47,9 +50,7 @@ def fix_old_name(dataset: HiPCTDataSet, bin_factor: int) -> None:
     downsample_res = downsampled_dataset.resolution_um
     downsample_dirs = list(original_path.parent.glob(f"{downsample_res}*_jp2_"))
     # Some datasets are truncated to 2 decimal points...
-    downsample_dirs += list(
-        original_path.parent.glob(f"{downsample_res:.02f}*_jp2_")
-    )
+    downsample_dirs += list(original_path.parent.glob(f"{downsample_res:.02f}*_jp2_"))
     if len(downsample_dirs) == 1:
         downsample_path = downsample_dirs[0]
         if downsample_path != downsampled_path_expected:
@@ -64,6 +65,49 @@ def fix_old_name(dataset: HiPCTDataSet, bin_factor: int) -> None:
                 downsample_path.rename(downsampled_path_expected)
 
 
+def get_slurm_script(
+    input_jp2_folder: Path, output_jp2_folder: Path, bin_factor: int, fname_prefix: str
+) -> str:
+    """
+    Construct a slurm script for running jp2 > n5 conversion on a single directory.
+    """
+    log_dir = LOG_DIR / "logs"
+    job_name = f"rebin_{input_jp2_folder.name}"
+
+    sh_script = f"""#!/bin/bash
+#SBATCH --output={log_dir}/%j-%x.log
+#SBATCH --partition=bm18
+#SBATCH --exclusive
+#SBATCH --nodes=1-1
+#SBATCH --mem=0
+#SBATCH --job-name={job_name}
+#SBATCH --time=4:00:00
+#SBATCH --chdir={Path(__file__).parent / "rebin"}
+echo ------------------------------------------------------
+
+echo SLURM_NNODES: $SLURM_NNODES
+echo SLURM_JOB_NODELIST: $SLURM_JOB_NODELIST
+echo SLURM_SUBMIT_DIR: $SLURM_SUBMIT_DIR
+echo SLURM_SUBMIT_HOST: $SLURM_SUBMIT_HOST
+echo SLURM_JOB_ID: $SLURM_JOB_ID
+echo SLURM_JOB_NAME: $SLURM_JOB_NAME
+echo SLURM_JOB_PARTITION: $SLURM_JOB_PARTITION
+echo SLURM_NTASKS: $SLURM_NTASKS
+echo SLURM_CPUS-PER-TASK: $SLURM_CPUS_PER_TASK
+echo SLURM_TASKS_PER_NODE: $SLURM_TASKS_PER_NODE
+echo SLURM_NTASKS_PER_NODE: $SLURM_NTASKS_PER_NODE
+echo ------------------------------------------------------
+
+echo Starting virtual environment
+/data/projects/hop/data_repository/Various/env/miniforge3/bin/activate
+mamba activate base
+echo Virtual environment started
+
+echo Running rebin command
+srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname_prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10
+"""
+
+    return sh_script
 
 
 def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
@@ -77,14 +121,14 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
         print(downsampled_path_expected.parent)
         print(downsampled_path_expected)
         print()
-        rebin.rebin(
-            dataset.esrf_jp2_path,
+        slurm_script = get_slurm_script(
+            input_jp2_folder=dataset.esrf_jp2_path,
+            output_jp2_folder=downsampled_path_expected,
             bin_factor=bin_factor,
-            cratio=10,
-            num_workers=64,
-            output_directory=downsampled_path_expected,
             fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
         )
+        print(slurm_script)
+        exit()
 
 
 if __name__ == "__main__":
