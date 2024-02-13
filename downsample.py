@@ -142,6 +142,7 @@ if __name__ == "__main__":
 
     fix_old_names(datasets, bin_factor=2)
     fix_old_names(datasets, bin_factor=4)
+    print()
 
     for dataset in datasets:
         downsample(dataset, bin_factor=2)
