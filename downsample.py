@@ -136,6 +136,17 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
         print()
 
 
+def create_all_downsamples(dataset: HiPCTDataSet):
+    bin_factor = 1
+    downsampled_size = dataset.compressed_size_gb
+    # Downsample until there's a dataset that fits in <= 4GB of memory
+    while downsampled_size > 4 / 10:
+        bin_factor *= 2
+        downsampled_size = dataset.compressed_size_gb / bin_factor**3
+
+        downsample(dataset, bin_factor=bin_factor)
+
+
 if __name__ == "__main__":
     datasets = load_datasets()
 
@@ -146,4 +157,4 @@ if __name__ == "__main__":
     """
 
     for dataset in datasets:
-        downsample(dataset, bin_factor=2)
+        create_all_downsamples(dataset)
