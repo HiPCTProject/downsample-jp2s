@@ -99,8 +99,8 @@ echo SLURM_NTASKS_PER_NODE: $SLURM_NTASKS_PER_NODE
 echo ------------------------------------------------------
 
 echo Starting virtual environment
-/data/projects/hop/data_repository/Various/env/miniforge3/bin/activate
-mamba activate base
+/data/projects/hop/data_repository/Various/env/david2112/bin/activate
+conda activate data-tools
 echo Virtual environment started
 
 echo Running rebin command
