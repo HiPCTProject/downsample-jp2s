@@ -82,7 +82,7 @@ def get_slurm_script(
 #SBATCH --mem=0
 #SBATCH --job-name={job_name}
 #SBATCH --time=4:00:00
-#SBATCH --chdir={Path(__file__).parent / "rebin"}
+#SBATCH --chdir={Path(__file__).parent}
 echo ------------------------------------------------------
 
 echo SLURM_NNODES: $SLURM_NNODES
