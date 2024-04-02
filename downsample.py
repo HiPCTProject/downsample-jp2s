@@ -101,7 +101,7 @@ echo ------------------------------------------------------
 echo Starting virtual environment
 conda activate data-tools
 echo Running rebin command
-srun python rebin.py --directory {input_jp2_folder} --output_directory {output_jp2_folder} --fname_prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num_workers=64
+srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname_prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num_workers=64
 """
 
     return sh_script
