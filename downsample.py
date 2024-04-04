@@ -73,12 +73,13 @@ def get_slurm_script(
     """
     log_dir = LOG_DIR / "logs"
     job_name = f"rebin_{output_jp2_folder.name}"
-    n_tasks = 8
+    n_cpus = 8
 
     sh_script = f"""#!/bin/bash
 #SBATCH --output={log_dir}/%j-%x.log
 #SBATCH --partition=bm18
-#SBATCH --ntasks={n_tasks}
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task={n_cpus}
 #SBATCH --job-name={job_name}
 #SBATCH --time=4:00:00
 #SBATCH --chdir={Path(__file__).parent / 'rebin'}
@@ -100,7 +101,7 @@ echo ------------------------------------------------------
 echo Starting virtual environment
 conda activate data-tools
 echo Running rebin command
-srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={n_tasks}
+srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={n_cpus}
 """
 
     return sh_script
