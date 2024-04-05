@@ -81,7 +81,7 @@ def get_slurm_script(
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task={n_cpus}
 #SBATCH --job-name={job_name}
-#SBATCH --time=4:00:00
+#SBATCH --time=8:00:00
 #SBATCH --chdir={Path(__file__).parent / 'rebin'}
 echo ------------------------------------------------------
 
