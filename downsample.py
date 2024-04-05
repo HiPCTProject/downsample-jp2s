@@ -77,7 +77,6 @@ def get_slurm_script(
 
     sh_script = f"""#!/bin/bash
 #SBATCH --output={log_dir}/%j-%x.log
-#SBATCH --partition=bm18
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task={n_cpus}
 #SBATCH --job-name={job_name}
