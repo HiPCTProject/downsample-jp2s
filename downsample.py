@@ -123,6 +123,8 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
             fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
         )
 
+        # For permissions 770 == rwxrwx---
+        downsampled_path_expected.mkdir(mode=0o770, exist_ok=True)
         job_file = LOG_DIR / "scripts" / f"{downsampled_path_expected.name}.sh"
         with open(job_file, "w") as f:
             f.write(slurm_script)
