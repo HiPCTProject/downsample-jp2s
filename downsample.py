@@ -113,6 +113,9 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
         dataset.esrf_jp2_path.parent / downsampled_dataset.esrf_jp2_path.name
     )
     if not (downsampled_path_expected.exists()):
+        # For permissions 770 == rwxrwx---
+        downsampled_path_expected.mkdir()
+        downsampled_path_expected.chmod(mode=0o770)
         print("Downsampling:")
         print(downsampled_path_expected.parent)
         print(downsampled_path_expected)
@@ -123,8 +126,6 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
             fname_prefix=downsampled_path_expected.name[:-4],  # -4 to strip 'jp2_'
         )
 
-        # For permissions 770 == rwxrwx---
-        downsampled_path_expected.mkdir(mode=0o770, exist_ok=True)
         job_file = LOG_DIR / "scripts" / f"{downsampled_path_expected.name}.sh"
         with open(job_file, "w") as f:
             f.write(slurm_script)
