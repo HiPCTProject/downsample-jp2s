@@ -78,7 +78,7 @@ def get_slurm_script(
 #SBATCH --output={log_dir}/%j-%x.log
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task={N_CPUS}
-#SBATCH --mem=100G
+#SBATCH --mem-per-cpu=20G
 #SBATCH --job-name={job_name}
 #SBATCH --time=12:00:00
 #SBATCH --chdir={Path(__file__).parent / 'rebin'}
