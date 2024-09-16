@@ -98,7 +98,7 @@ echo SLURM_NTASKS_PER_NODE: $SLURM_NTASKS_PER_NODE
 echo ------------------------------------------------------
 
 echo Starting virtual environment
-source /data/projects/hop/data_repository/Various/software/david2112/hipct-data-tools/.venv/bin/activate
+source /data/projects/hop/data_repository/Various/software/production/hipct-data-tools/.venv/bin/activate
 echo Running rebin command
 srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={n_cpus}
 """
