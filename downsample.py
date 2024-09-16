@@ -11,7 +11,7 @@ import subprocess
 LOG_DIR = Path("/data/projects/hop/data_repository/Various/logs/rebinning")
 
 differ = difflib.Differ()
-
+N_CPUS = 32
 
 def print_diff(a: str, b: str) -> None:
     """
@@ -73,14 +73,14 @@ def get_slurm_script(
     """
     log_dir = LOG_DIR / "logs"
     job_name = f"rebin_{output_jp2_folder.name}"
-    n_cpus = 8
 
     sh_script = f"""#!/bin/bash
 #SBATCH --output={log_dir}/%j-%x.log
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task={n_cpus}
+#SBATCH --cpus-per-task={N_CPUS}
+#SBATCH --mem=100G
 #SBATCH --job-name={job_name}
-#SBATCH --time=8:00:00
+#SBATCH --time=12:00:00
 #SBATCH --chdir={Path(__file__).parent / 'rebin'}
 echo ------------------------------------------------------
 
@@ -100,7 +100,7 @@ echo ------------------------------------------------------
 echo Starting virtual environment
 source /data/projects/hop/data_repository/Various/software/production/hipct-data-tools/.venv/bin/activate
 echo Running rebin command
-srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={n_cpus}
+srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={N_CPUS}
 """
 
     return sh_script
