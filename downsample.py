@@ -1,4 +1,4 @@
-from hipct_data_tools.data_model import HiPCTDataSet
+from hipct_data_tools.models.dataset_model import HiPCTDataSet
 from hipct_data_tools import load_datasets
 
 from copy import deepcopy
