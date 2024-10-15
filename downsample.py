@@ -73,6 +73,7 @@ def get_slurm_script(
     """
     log_dir = LOG_DIR / "logs"
     job_name = f"rebin_{output_jp2_folder.name}"
+    temp_path = output_jp2_folder.parent / ("_in_progress_" + output_jp2_folder.name)
 
     sh_script = f"""#!/bin/bash
 #SBATCH --output={log_dir}/%j-%x.log
@@ -100,7 +101,9 @@ echo ------------------------------------------------------
 echo Starting virtual environment
 source /data/projects/hop/data_repository/Various/software/production/hipct-data-tools/.venv/bin/activate
 echo Running rebin command
-srun python rebin.py --directory {input_jp2_folder} --output-directory {output_jp2_folder} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={N_CPUS}
+mkdir {temp_path}
+srun python rebin.py --directory {input_jp2_folder} --output-directory {temp_path} --fname-prefix={fname_prefix} --bin-factor={bin_factor} --cratio=10 --num-workers={N_CPUS}
+mv {temp_path} {output_jp2_folder}
 """
 
     return sh_script
@@ -114,8 +117,6 @@ def downsample(dataset: HiPCTDataSet, bin_factor: int) -> None:
     )
     if not (downsampled_path_expected.exists()):
         # For permissions 770 == rwxrwx---
-        downsampled_path_expected.mkdir()
-        downsampled_path_expected.chmod(mode=0o770)
         print("Downsampling:")
         print(downsampled_path_expected.parent)
         print(downsampled_path_expected)
